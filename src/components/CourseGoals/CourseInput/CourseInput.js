@@ -1,23 +1,31 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
-import Button from '../../UI/Button/Button';
-import './CourseInput.css';
+import Button from "../../UI/Button/Button";
+import "./CourseInput.css";
 
-const CourseInput = props => {
-  const [enteredValue, setEnteredValue] = useState('');
+const CourseInput = (props) => {
+  const [enteredValue, setEnteredValue] = useState("");
+  const [hasContent, updateHasContent] = useState(true);
 
-  const goalInputChangeHandler = event => {
+  const goalInputChangeHandler = (event) => {
+    if (event.target.value.length > 0) {
+      updateHasContent(true);
+    }
     setEnteredValue(event.target.value);
   };
 
-  const formSubmitHandler = event => {
+  const formSubmitHandler = (event) => {
     event.preventDefault();
+    if (enteredValue.trim().length === 0) {
+      updateHasContent(false);
+      return;
+    }
     props.onAddGoal(enteredValue);
   };
 
   return (
     <form onSubmit={formSubmitHandler}>
-      <div className="form-control">
+      <div className={`form-control ${!hasContent ? "invalid" : ""}`}>
         <label>Course Goal</label>
         <input type="text" onChange={goalInputChangeHandler} />
       </div>
